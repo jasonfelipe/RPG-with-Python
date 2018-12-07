@@ -7,7 +7,7 @@
 # 
 
 
-
+# Using the class method to create an object
 class character:
     def __init__(self, name, job, level, armor, attack, health, experience):
         self.name = name
@@ -18,9 +18,11 @@ class character:
         self.health = health
         self.experience = experience
 
+
+# Empty Variable which is filled in on our newGame function
 player = None
 
-
+# Monsters that were created
 goblin = character('Goblin', 'Goblin', 2, 0, 1, 8, 30)
 rat = character('Rat', 'animal', 1, 0, 1, 3, 10)
 knight = character('Knight', 'Knight', 10, 20, 20, 100, 500)
@@ -43,6 +45,9 @@ def newGame():
     playerName = input('What is your character\'s name? ')
     playerJob = input('What is your character\'s job? ')
     player = character(playerName, playerJob, 1, 1, 3, 10, 0)
+
+
+
     intro(player)
     question()
 
@@ -83,6 +88,7 @@ def action(playerChoice):
 
 def help():
     print("Here is what you can do:")
+    print()
     print('Fight = Fight a random monster')
     print('Wander = Just travel around')
     print('Stats = Take a look at your stats')
@@ -106,3 +112,8 @@ def printInfo(player):
     print('-' * 50)
 
 newGame()
+
+
+
+
+
