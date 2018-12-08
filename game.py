@@ -3,13 +3,19 @@
 #  Choose your own adventure system?
 #  
 # 
-# 
+# TO DO:
+# Get Character Fighting.
+# Get Health, money, and Experience Points both working
+# Get a shop working
 # 
 
 
 # Using the class method to create an object
+import random
+
+
 class character:
-    def __init__(self, name, job, level, armor, attack, health, experience):
+    def __init__(self, name, job, level, armor, attack, health, experience, gold):
         self.name = name
         self.job = job
         self.level = level
@@ -17,37 +23,55 @@ class character:
         self.attack = attack
         self.health = health
         self.experience = experience
+        self.gold = gold
+
+
+class protagonist(character):
+    def __init__(self, name, job, level, armor, attack, health, experience, gold, \
+        exploration):
+        
+        self.name = name
+        self.job = job
+        self.level = level
+        self.armor = armor
+        self.attack = attack
+        self.health = health
+        self.experience = experience
+        self.gold = gold
+
 
 
 # Empty Variable which is filled in on our newGame function
 player = None
 
 # Monsters that were created
-goblin = character('Goblin', 'Goblin', 2, 0, 1, 8, 30)
-rat = character('Rat', 'animal', 1, 0, 1, 3, 10)
-knight = character('Knight', 'Knight', 10, 20, 20, 100, 500)
-dragon = character('Dragon', 'Dragon', 100, 100, 100, 100, 1000000000)
-peasant = character('Man', 'Peasant', 5, 2, 3, 15, 100)
+# Name, Job, level, armor, attack, health, exp, $$
+goblin = character('Goblin', 'Goblin', 2, 0, 1, 8, 30, 10)
+rat = character('Rat', 'Animal', 1, 0, 1, 3, 10, 5)
+knight = character('Knight', 'Knight', 10, 20, 20, 100, 500, 300)
+dragon = character('Dragon', 'Dragon', 100, 100, 100, 1000, 1000000000, 1000000000)
+peasant = character('Man', 'Peasant', 5, 2, 3, 15, 100, 30)
+wolf = character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
 
 monsters = [goblin, rat, knight, dragon, peasant]
 
 def fight():
-
-    opponent = monsters.choice
-    print('This should be a battle between two things')
     global player
-    print(player "versus" )
+    opponent = random.choice(monsters)
 
+    print('This should be a battle between two things')
+    print('-' * 50)
+    print(player.name,"versus",opponent.name)
+    print('-' * 50)
+    print("PLACEHOLDER PRINT")
+    question()
 
 
 def newGame():
     global player
     playerName = input('What is your character\'s name? ')
     playerJob = input('What is your character\'s job? ')
-    player = character(playerName, playerJob, 1, 1, 3, 10, 0)
-
-
-
+    player = protagonist(playerName, playerJob, 1, 1, 3, 10, 0, 0, 0)
     intro(player)
     question()
 
@@ -65,6 +89,7 @@ def wander():
 def save():
     # Placeholder
     print("Saving... JK IT'S NOT DONE YET!")
+    question()
 
 def action(playerChoice):
     print("Your choice was:", playerChoice)
@@ -73,13 +98,19 @@ def action(playerChoice):
         fight()
     elif playerChoice.lower() == 'wander':
         wander()
+        # Placeholder
+        question()
     elif playerChoice.lower() == 'stats':
         printInfo(player)
         question()
-    elif playerChoice.lower() == 'end':
-        print('Good Bye!')
     elif playerChoice.lower() == 'save':
         save()
+        question()
+    elif playerChoice.lower() == 'help':
+        help()
+        question()
+    elif playerChoice.lower() == 'end':
+        print('Good Bye!')
     else:
         print('Choice not found, please try again')
         print('-' * 50)
@@ -96,7 +127,6 @@ def help():
     print('End = Ends the Program')
     print('-' * 50)
 
-
 def intro(player):
     print('Hello',player.name + '!')
     print('Here are your stats! ')
@@ -109,6 +139,8 @@ def printInfo(player):
     print('HP:',player.health)
     print('Attack:',player.attack)
     print('Armor:',player.armor)
+    print('Experience:',player.experience)
+    print('Gold:',player.gold)
     print('-' * 50)
 
 newGame()
