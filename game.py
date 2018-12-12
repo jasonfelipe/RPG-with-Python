@@ -50,22 +50,39 @@ goblin = character('Goblin', 'Goblin', 2, 0, 1, 8, 30, 10)
 rat = character('Rat', 'Animal', 1, 0, 1, 3, 10, 5)
 knight = character('Knight', 'Knight', 10, 20, 20, 100, 500, 300)
 dragon = character('Dragon', 'Dragon', 100, 100, 100, 1000, 1000000000, 1000000000)
-peasant = character('Man', 'Peasant', 5, 2, 3, 15, 100, 30)
+peasant = character('Villager', 'Peasant', 5, 2, 3, 15, 100, 30)
 wolf = character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
 
-monsters = [goblin, rat, knight, dragon, peasant]
+monsters = [goblin, rat, knight, dragon, peasant, wolf]
 
 def fight():
     global player
-    opponent = random.choice(monsters)
+    enemy = random.choice(monsters)
+    first = random.choice([0, 1])
+    # print('Number chosen was:',first)
 
-    print('This should be a battle between two things')
     print('-' * 50)
-    print(player.name,"versus",opponent.name)
+    print(player.name,"versus",enemy.name)
+    if first != 0:
+        playerFirst(player.name, enemy.name)
+    else:
+        enemyFirst(player.name, enemy.name)
+                
     print('-' * 50)
-    print("PLACEHOLDER PRINT")
     question()
 
+
+def playerFirst(player, enemy):
+    print(player,"goes first!")
+    print(player,'attacks',enemy)
+    print(enemy,'winces in pain!')
+    print(player,'says sorry and leaves...')
+
+def enemyFirst(player, enemy):
+    print(enemy,"goes first!")
+    print(enemy,'attacks',player)
+    print(player,'winces in pain!')
+    print(enemy,'says sorry and leaves...')
 
 def newGame():
     global player
@@ -111,11 +128,20 @@ def action(playerChoice):
         question()
     elif playerChoice.lower() == 'end':
         print('Good Bye!')
+    elif playerChoice.lower() =='die':
+        death()
     else:
         print('Choice not found, please try again')
         print('-' * 50)
         question()
 
+
+def death():
+    print('Thus it was not meant to be...')
+    print(player.name,"looks up into the sky...")
+    print('With one final breath, he screams and perishes...')
+    print()
+    print("GAME OVER!")
 
 def help():
     print("Here is what you can do:")
@@ -130,10 +156,11 @@ def help():
 def intro(player):
     print('Hello',player.name + '!')
     print('Here are your stats! ')
+    print()
     printInfo(player)
 
 def printInfo(player):
-    print('-' * 50)
+    # print('-' * 50)
     print('Job:',player.job)
     print('Level:',player.level)
     print('HP:',player.health)
