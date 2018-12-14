@@ -55,34 +55,170 @@ wolf = character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
 
 monsters = [goblin, rat, knight, dragon, peasant, wolf]
 
+
+# THINK OF HOW THIS FIGHT IS GOING TO WORK...
+# What is the loop of the fight?
+# Someone goes first, then opponent goes. etc.
+# 
+# 
+
+
 def fight():
     global player
+    orderInput = input("What is your choice? ")
+    order(orderInput)
+
+
+def order(input):
+    global player
     enemy = random.choice(monsters)
-    first = random.choice([0, 1])
-    # print('Number chosen was:',first)
+    
+    if input.lower() == 'attack':
+        first = random.choice([0, 1])
+        print(player.name,"versus",enemy.name)
+        
+        if first != 0:
+            firstTurn(player, enemy)
+        else:
+            firstTurn(enemy, player)
 
-    print('-' * 50)
-    print(player.name,"versus",enemy.name)
-    if first != 0:
-        playerFirst(player.name, enemy.name)
+    elif input.lower() == 'run':
+        runAway()
+        question()
+    elif input.lower() == 'defend':
+        defend()
+    elif input.lower() == 'help':
+        fightHelp()
+        fight()
+    elif input.lower() == 'die':
+        death()
     else:
-        enemyFirst(player.name, enemy.name)
-                
-    print('-' * 50)
-    question()
+        print("Sorry, I cannot recognize your choice!")
+        fight()
 
+def runAway():
+    global player
+    print(player.name,'runs away!')                
 
-def playerFirst(player, enemy):
-    print(player,"goes first!")
-    print(player,'attacks',enemy)
-    print(enemy,'winces in pain!')
-    print(player,'says sorry and leaves...')
+def defend():
+    global player
+    armor = player.armor * 2
+    print(player.name,'defends! They now have', armor,'armor!')
 
-def enemyFirst(player, enemy):
-    print(enemy,"goes first!")
-    print(enemy,'attacks',player)
-    print(player,'winces in pain!')
-    print(enemy,'says sorry and leaves...')
+def attacked(health, attack):
+    health = health - attack
+    return health
+
+def firstTurn(first, second):
+    global player
+    fName = first.name
+    sName = second.name
+
+    fHealth = first.health
+    sHealth = second.health
+
+    fAttack = first.attack
+    sAttack = second.attack
+
+    print(fName,'goes first!')
+    print(fName,'attacks',sName)
+    print(sName,'takes',fAttack,'damage!')
+    sHealth = attacked(sHealth, fAttack)
+    if sHealth <= 0:
+        if sName == player.name:
+            print(sName,'has been slayed!')
+            print('-' * 50)
+            death()
+        else:
+            print(sName,'has been slayed!')
+            print(fName,'does a sweet victory dance!')
+            question()
+    else:
+        secondTurn(first, second)
+
+def secondTurn(first, second):
+    global player
+    fName = first.name
+    sName = second.name
+
+    fHealth = first.health
+    sHealth = second.health
+
+    fAttack = first.attack
+    sAttack = second.attack
+
+    print(sName,'winces in pain!')
+    print(sName,'counters',fName)
+    print(fName,'takes',sAttack,'damage!')
+    fHealth = attacked(fHealth, sAttack)
+    if fHealth <= 0:
+        if fName == player.name:
+            print(fName,'has been slayed!')
+            print('-' * 50)
+            death()
+        else:
+            print(fName,'has been slayed!')
+            print(sName,'does a sweet victory dance!')
+            question()
+    else:
+        print('-' * 50)
+        fight()
+
+# Placeholder code for a fight
+# def playerFirst(player, enemy):
+#     pName = player.name
+#     eName = enemy.name
+
+#     pHealth = player.health
+#     eHealth = enemy.health
+
+#     pAttack = player.attack
+#     eAttack = enemy.attack
+
+#     print(pName,"goes first!")
+#     print(pName,'attacks',eName)
+#     print(eName,'takes',pAttack,'damage!')
+#     eHealth = attacked(eHealth, pAttack)
+#     print(eName,'winces in pain!')
+    
+#     if eHealth <= 0:
+#         print(eName,'is DEAD! OH NOOOOO!')
+#         # Placeholder for EXP and gold gain!
+#         print('-' * 50)
+#         question()
+#     else:
+#         print(eName,'now has',eHealth,'HP!')
+#         print(eName,'counters',pName)
+#         print(pName,'takes',eAttack,'damage!')
+#         pHealth = attack(pHealth, eAttack)
+#         fight()
+
+# Make a simplier function than what you have above...
+        
+# Placeholder code for a fight
+# def enemyFirst(player, enemy):
+#     pName = player.name
+#     eName = enemy.name
+
+#     pHealth = player.health
+#     eHealth = enemy.health
+
+#     pAttack = player.attack
+#     eAttack = enemy.attack
+
+#     print(eName,"goes first!")
+#     print(eName,'attacks',pName)
+#     print(pName,'takes',eAttack,'damage!')
+#     pHealth = attacked(pHealth, eAttack)
+#     print(pName,'winces in pain!')
+
+#     if pHealth <= 0:
+#         print(pName,'is DEAD! OH NO!!!')
+#         print('-' * 50)
+#         death()
+#     else:
+#         print(pName,'now has',pHealth,'HP!')
+#         print(eName,'says sorry and leaves...')
 
 def newGame():
     global player
@@ -95,6 +231,7 @@ def newGame():
 def question():
     global player
     help()
+    print('-' * 50)
     playerChoice = input(player.name +"! What would you like to do? ")
     action(playerChoice)
 
@@ -102,11 +239,17 @@ def question():
 def wander():
     # Placeholder
     print("You take a deep breath and take in the countryside...")
+    print('-' * 50)
+    question()
 
 def save():
     # Placeholder
     print("Saving... JK IT'S NOT DONE YET!")
-    question()
+    cont = input('Would you like to continue playing? Y/n' )
+    if cont == 'Y':
+        question()
+    else:
+        quit()
 
 def action(playerChoice):
     print("Your choice was:", playerChoice)
@@ -142,6 +285,7 @@ def death():
     print('With one final breath, he screams and perishes...')
     print()
     print("GAME OVER!")
+    quit()
 
 def help():
     print("Here is what you can do:")
@@ -151,7 +295,16 @@ def help():
     print('Stats = Take a look at your stats')
     print('Save = Saves your game progress')
     print('End = Ends the Program')
+
+def fightHelp():
+    print("Here's what you can do:")
+    print()
+    print('Attack = Attack the monster, and the monster also attacks you!')
+    print('Defend = You defend (Armor x2) for two turns! The monster attacks you still')
+    print('Run = RUN TO LIVE ANOTHER DAY!')
     print('-' * 50)
+    question()
+
 
 def intro(player):
     print('Hello',player.name + '!')
@@ -159,15 +312,15 @@ def intro(player):
     print()
     printInfo(player)
 
-def printInfo(player):
+def printInfo(something):
     # print('-' * 50)
-    print('Job:',player.job)
-    print('Level:',player.level)
-    print('HP:',player.health)
-    print('Attack:',player.attack)
-    print('Armor:',player.armor)
-    print('Experience:',player.experience)
-    print('Gold:',player.gold)
+    print('Job:',something.job)
+    print('Level:',something.level)
+    print('HP:',something.health)
+    print('Attack:',something.attack)
+    print('Armor:',something.armor)
+    print('Experience:',something.experience)
+    print('Gold:',something.gold)
     print('-' * 50)
 
 newGame()
