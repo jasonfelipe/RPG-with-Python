@@ -63,38 +63,50 @@ monsters = [goblin, rat, knight, dragon, peasant, wolf]
 # 
 
 
-def fight():
+def fight(enemy):
     global player
-    orderInput = input("What is your choice? ")
-    order(orderInput)
+    # fightHelp()
+
+    try: 
+        enemy
+    except NameError:
+        enemy = random.choice(monsters)
+        print('Your enemy is:', enemy.name)
+        orderInput = input("What is your choice? ")
+        order(orderInput, enemy)
+    else: 
+        orderInput = input("What is your choice? ")
+        order(orderInput, enemy)
+
+def turnOrder(player, enemy):
+    first = random.choice([0, 1])
+    print(player.name,"versus",enemy.name)
+        
+    if first != 0:
+        firstTurn(player, enemy)
+    else:
+        firstTurn(enemy, player)
 
 
-def order(input):
+def order(input, enemy):
     global player
-    enemy = random.choice(monsters)
     
     if input.lower() == 'attack':
-        first = random.choice([0, 1])
-        print(player.name,"versus",enemy.name)
-        
-        if first != 0:
-            firstTurn(player, enemy)
-        else:
-            firstTurn(enemy, player)
-
+        turnOrder(player, enemy)
     elif input.lower() == 'run':
         runAway()
         question()
     elif input.lower() == 'defend':
         defend()
+        turnOrder(player, enemy)
     elif input.lower() == 'help':
         fightHelp()
-        fight()
+        fight(enemy)
     elif input.lower() == 'die':
         death()
     else:
         print("Sorry, I cannot recognize your choice!")
-        fight()
+        fight(enemy)
 
 def runAway():
     global player
@@ -169,7 +181,10 @@ def secondTurn(first, second):
             question()
     else:
         print('-' * 50)
-        fight()
+        if fName == player.name:
+            fight(second)
+        else: 
+            fight(first)
 
 def newGame():
     global player
@@ -206,7 +221,8 @@ def action(playerChoice):
     print("Your choice was:", playerChoice)
     print('-' * 50)
     if playerChoice.lower() == "fight":
-        fight()
+        selectedEnemy = random.choice(monsters)
+        fight(selectedEnemy)
     elif playerChoice.lower() == 'wander':
         wander()
         # Placeholder
@@ -254,7 +270,6 @@ def fightHelp():
     print('Defend = You defend (Armor x2) for two turns! The monster attacks you still')
     print('Run = RUN TO LIVE ANOTHER DAY!')
     print('-' * 50)
-    question()
 
 
 def intro(player):
