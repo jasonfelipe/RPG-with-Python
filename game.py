@@ -28,8 +28,7 @@ class character:
 
 class protagonist(character):
     def __init__(self, name, job, level, armor, attack, health, experience, gold, \
-        exploration):
-        
+        exploration):        
         self.name = name
         self.job = job
         self.level = level
@@ -38,7 +37,7 @@ class protagonist(character):
         self.health = health
         self.experience = experience
         self.gold = gold
-
+        self.exploration = exploration
 
 
 # Empty Variable which is filled in on our newGame function
@@ -62,21 +61,26 @@ monsters = [goblin, rat, knight, dragon, peasant, wolf]
 # 
 # 
 
+# Stuff to do: 
+# Display Enemy stats before and after combat.
+# Make function that actually carries health and stuff.
+# Make it so exp and gold go into the Protagonist.
+# Rejoice!
 
 def fight(enemy):
     global player
     # fightHelp()
-
     try: 
         enemy
     except NameError:
         enemy = random.choice(monsters)
         print('Your enemy is:', enemy.name)
-        orderInput = input("What is your choice? ")
-        order(orderInput, enemy)
+        battleChoice = input("What is your choice? ")
+        battle(battleChoice, enemy)
     else: 
-        orderInput = input("What is your choice? ")
-        order(orderInput, enemy)
+        print('Your enemy is:', enemy.name)
+        battleChoice = input("What is your choice? ")
+        battle(battleChoice, enemy)
 
 def turnOrder(player, enemy):
     first = random.choice([0, 1])
@@ -88,9 +92,8 @@ def turnOrder(player, enemy):
         firstTurn(enemy, player)
 
 
-def order(input, enemy):
-    global player
-    
+def battle(input, enemy):
+    global player    
     if input.lower() == 'attack':
         turnOrder(player, enemy)
     elif input.lower() == 'run':
@@ -204,12 +207,17 @@ def question():
 
 def wander():
     # Placeholder
+    # To Dos for this:
+    # use the exploration variable inside protagonist to be able to go to different areas/places
+
     print("You take a deep breath and take in the countryside...")
     print('-' * 50)
     question()
 
 def save():
     # Placeholder
+    # To Dos:
+    # Learn how to save something LMAO!
     print("Saving... JK IT'S NOT DONE YET!")
     cont = input('Would you like to continue playing? Y/n' )
     if cont == 'Y':
