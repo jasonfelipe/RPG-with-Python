@@ -6,7 +6,20 @@
 # Get Character Fighting.
 # Get Health, money, and Experience Points both working
 # Get a shop working
+# Equip system?
+# Get inventory system
+
+
+# Questions for yourself:
+# Hey, why not Template literals in Python instead of concatenation? (%s replaces variable names after.)
+# Example: 
 # 
+# name = Jason
+# x = "%s is new to coding Python!" % (name) 
+# 
+# 
+# Is having a dictionary full of other dictionaries of lists for text worth more than using a 
+# function to print out strings? 
 
 
 # =============================================
@@ -179,12 +192,13 @@ def battle(input, enemy):
     elif input.lower() == 'die':
         death()
     else:
-        print("Sorry, I cannot recognize your choice!")
+        print("Sorry, your choice isn't recognized!")
         fight(enemy)
 
 def runAway():
     global player
-    print(player.name,'runs away!')                
+    print(player.name,'runs away!')
+    print("-" * 50)                
 
 def defend():
     global player
@@ -271,7 +285,7 @@ def wander():
 
     exploreUp()
     print("Your total exploration points are:", player.exploration)
-    
+
     exploreCheck(player.exploration)
     print('-' * 50)
     command()
@@ -305,7 +319,7 @@ def exploreCheck(points):
 
 
 # =============================================
-#                   Save STUFF
+#                Save STUFF
 # =============================================
 
 def save():
@@ -313,10 +327,11 @@ def save():
     # To Dos:
     # Learn how to save something LMAO!
     print("Saving... JK IT'S NOT DONE YET!")
-    cont = input('Would you like to continue playing? Y/n' )
-    if cont == 'Y':
+    cont = input('Would you like to continue playing? Y/n ')
+    if cont.upper() == 'Y':
         command()
     else:
+        print('THANKS FOR PLAYING!')
         quit()
 
 # =============================================
