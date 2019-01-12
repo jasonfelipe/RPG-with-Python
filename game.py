@@ -2,7 +2,6 @@
 #  Level up system?
 #  Choose your own adventure system?
 #  
-# 
 # TO DO:
 # Get Character Fighting.
 # Get Health, money, and Experience Points both working
@@ -10,9 +9,41 @@
 # 
 
 
+# =============================================
+#               GLOBAL STUFF
+# =============================================
+
 # Using the class method to create an object
 import random
 
+explorationTxt = {
+    'Noob': ["You take a deep breath and take in the countryside...",
+        "You look around and think to yourself, 'where am I?'"],
+    'Scrub': ['You look around you, everything seems so fresh and new!',
+        "You feel like walking somewhere... but where?"],
+    'Novice': ['Your wandering leads you to some caves, a small fort, and a village...',
+        "You feel like you'll gain some sort of benefit going through these areas..."],
+    'Average': ['You find a road and keep walking on it...',
+        'At the end you find a city and are allowed to enter!',
+        'You go into the local tavern and strike a conversation with the locals...',
+        'You find out other areas of exploration! Get out there!'],
+    'Apprentice': ['You feel connected to the area you are in...',
+        'But inside yourself you know that there is more out there...'],
+    'Experienced': ["You feel well-travelled, but there are some places you've yet to explore...",
+        "You've heard of other islands, cities, and small villages.",
+        "The choice is yours, go and get out there!"],
+    'Veteran': ['You have walked the paths to walk, but...',
+        "You wonder what other secrets this place holds...",
+        'You have heard rumors from local mercenaries of hidden caves, underwater habitats, and sky realms.'],
+    'Master': ['You feel like you know this place better than yourself, and yet...',
+        'You almost feel connected to the world...',
+        'Something is missing though.',
+        'Something... otherworldly...'],
+    'Grandmaster': ['Congrats you have travelled the entire world!',
+        'You feel accomplished... but...' ,
+        'Your legs hurt too much and you die.'],
+    
+}
 
 class character:
     def __init__(self, name, job, level, armor, attack, health, experience, gold):
@@ -54,6 +85,46 @@ wolf = character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
 
 monsters = [goblin, rat, knight, dragon, peasant, wolf]
 
+# =============================================
+#               INFO STUFF
+# =============================================
+
+def intro(player):
+    print('Hello',player.name + '!')
+    print('Here are your stats! ')
+    print()
+    printInfo(player)
+
+def printInfo(something):
+    # print('-' * 50)
+    print('Job:',something.job)
+    print('Level:',something.level)
+    print('HP:',something.health)
+    print('Attack:',something.attack)
+    print('Armor:',something.armor)
+    print('Experience:',something.experience)
+    print('Gold:',something.gold)
+    print('-' * 50)
+
+    
+def printTxtArray(arr):
+    for x in arr:
+        print (x)
+
+# Begins the game
+
+def newGame():
+    global player
+    playerName = input('What is your character\'s name? ')
+    playerJob = input('What is your character\'s job? ')
+    player = protagonist(playerName, playerJob, 1, 1, 3, 10, 0, 0, 0)
+    intro(player)
+    command()
+
+
+# =============================================
+#               BATTLE STUFF
+# =============================================
 
 # THINK OF HOW THIS FIGHT IS GOING TO WORK...
 # What is the loop of the fight?
@@ -69,7 +140,7 @@ monsters = [goblin, rat, knight, dragon, peasant, wolf]
 
 def fight(enemy):
     global player
-    # fightHelp()
+    fightHelp()
     try: 
         enemy
     except NameError:
@@ -98,7 +169,7 @@ def battle(input, enemy):
         turnOrder(player, enemy)
     elif input.lower() == 'run':
         runAway()
-        question()
+        command()
     elif input.lower() == 'defend':
         defend()
         turnOrder(player, enemy)
@@ -152,7 +223,7 @@ def firstTurn(first, second):
         else:
             print(sName,'has been slayed!')
             print(fName,'does a sweet victory dance!')
-            question()
+            command()
     else:
         secondTurn(first, second)
 
@@ -181,7 +252,7 @@ def secondTurn(first, second):
             print(fName,'has been slayed!')
             print(sName,'does a sweet victory dance!')
             print('-' * 50)        
-            question()
+            command()
     else:
         print('-' * 50)
         if fName == player.name:
@@ -189,30 +260,53 @@ def secondTurn(first, second):
         else: 
             fight(first)
 
-def newGame():
-    global player
-    playerName = input('What is your character\'s name? ')
-    playerJob = input('What is your character\'s job? ')
-    player = protagonist(playerName, playerJob, 1, 1, 3, 10, 0, 0, 0)
-    intro(player)
-    question()
-
-def question():
-    global player
-    help()
-    print('-' * 50)
-    playerChoice = input(player.name +"! What would you like to do? ")
-    action(playerChoice)
-
-
+# =============================================
+#               EXPLORATION STUFF
+# =============================================
 def wander():
+    global player
     # Placeholder
     # To Dos for this:
-    # use the exploration variable inside protagonist to be able to go to different areas/places
+    # Checks exploration points, unlocks new areas when a certain threshold is there.
 
-    print("You take a deep breath and take in the countryside...")
+    exploreUp()
+    print("Your total exploration points are:", player.exploration)
+    
+    exploreCheck(player.exploration)
     print('-' * 50)
-    question()
+    command()
+
+def exploreUp():
+    global player
+    explorePts = player.exploration
+    explorePts = explorePts + 1
+    player.exploration = explorePts
+
+
+def exploreCheck(points):
+    if points >= 100:
+        printTxtArray(explorationTxt.get('Grandmaster'))
+    elif points >= 70:
+        printTxtArray(explorationTxt.get('Master'))
+    elif points >= 50:
+        printTxtArray(explorationTxt.get('Experienced'))       
+    elif points >= 30:
+        printTxtArray(explorationTxt.get('Apprentice'))
+    elif points >= 20:
+        printTxtArray(explorationTxt.get('Veteran'))
+    elif points >= 15:
+        printTxtArray(explorationTxt.get('Average'))
+    elif points >= 10:
+        printTxtArray(explorationTxt.get('Novice'))     
+    elif points >= 5:
+        printTxtArray(explorationTxt.get('Scrub'))
+    elif points >= 1: 
+        printTxtArray(explorationTxt.get('Noob'))
+
+
+# =============================================
+#                   Save STUFF
+# =============================================
 
 def save():
     # Placeholder
@@ -221,9 +315,20 @@ def save():
     print("Saving... JK IT'S NOT DONE YET!")
     cont = input('Would you like to continue playing? Y/n' )
     if cont == 'Y':
-        question()
+        command()
     else:
         quit()
+
+# =============================================
+#               COMMAND STUFF
+# =============================================
+
+def command():
+    global player
+    help()
+    print('-' * 50)
+    playerChoice = input(player.name +"! What would you like to do? ")
+    action(playerChoice)
 
 def action(playerChoice):
     print("Your choice was:", playerChoice)
@@ -233,17 +338,18 @@ def action(playerChoice):
         fight(selectedEnemy)
     elif playerChoice.lower() == 'wander':
         wander()
-        # Placeholder
-        question()
+        # Placeholder, check out the wander stuff.
+        command()
     elif playerChoice.lower() == 'stats':
         printInfo(player)
-        question()
+        command()
     elif playerChoice.lower() == 'save':
+        # Placeholder, check out the save stuff.
         save()
-        question()
+        command()
     elif playerChoice.lower() == 'help':
         help()
-        question()
+        command()
     elif playerChoice.lower() == 'end':
         print('Good Bye!')
     elif playerChoice.lower() =='die':
@@ -251,8 +357,7 @@ def action(playerChoice):
     else:
         print('Choice not found, please try again')
         print('-' * 50)
-        question()
-
+        command()
 
 def death():
     print('Thus it was not meant to be...')
@@ -280,23 +385,7 @@ def fightHelp():
     print('-' * 50)
 
 
-def intro(player):
-    print('Hello',player.name + '!')
-    print('Here are your stats! ')
-    print()
-    printInfo(player)
-
-def printInfo(something):
-    # print('-' * 50)
-    print('Job:',something.job)
-    print('Level:',something.level)
-    print('HP:',something.health)
-    print('Attack:',something.attack)
-    print('Armor:',something.armor)
-    print('Experience:',something.experience)
-    print('Gold:',something.gold)
-    print('-' * 50)
-
+# Begins the game
 newGame()
 
 
