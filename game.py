@@ -11,14 +11,16 @@
 
 
 # Questions for yourself:
-# Hey, why not Template literals in Python instead of concatenation? (%s replaces variable names after.)
+# Hey, why not Template literals in Python instead of concatenation? 
+# (%s replaces variable names after.)
 # Example: 
 # 
 # name = Jason
 # x = "%s is new to coding Python!" % (name) 
 # 
 # 
-# Is having a dictionary full of other dictionaries of lists for text worth more than using a 
+# Is having a dictionary full of other dictionaries of lists 
+# for text worth more than using a 
 # function to print out strings? 
 
 
@@ -58,7 +60,7 @@ explorationTxt = {
     
 }
 
-class character:
+class Character:
     def __init__(self, name, job, level, armor, attack, health, experience, gold):
         self.name = name
         self.job = job
@@ -68,20 +70,22 @@ class character:
         self.health = health
         self.experience = experience
         self.gold = gold
+        pass
 
 
-class protagonist(character):
-    def __init__(self, name, job, level, armor, attack, health, experience, gold, \
-        exploration):        
+class NewProtagonist(Character):
+    def __init__(self, name, job):
+        exploration = 0
         self.name = name
         self.job = job
-        self.level = level
-        self.armor = armor
-        self.attack = attack
-        self.health = health
-        self.experience = experience
-        self.gold = gold
-        self.exploration = exploration
+        self.level = 1
+        self.armor = 3
+        self.attack = 5
+        self.health = 20
+        self.experience = 0
+        self.gold = 0
+        self.exploration = 0
+        super().__init__(name, job, self.level, self.armor, self.health, self.experience, self.gold, exploration)
 
 
 # Empty Variable which is filled in on our newGame function
@@ -89,12 +93,12 @@ player = None
 
 # Monsters that were created
 # Name, Job, level, armor, attack, health, exp, $$
-goblin = character('Goblin', 'Goblin', 2, 0, 1, 8, 30, 10)
-rat = character('Rat', 'Animal', 1, 0, 1, 3, 10, 5)
-knight = character('Knight', 'Knight', 10, 20, 20, 100, 500, 300)
-dragon = character('Dragon', 'Dragon', 100, 100, 100, 1000, 1000000000, 1000000000)
-peasant = character('Villager', 'Peasant', 5, 2, 3, 15, 100, 30)
-wolf = character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
+goblin = Character('Goblin', 'Goblin', 2, 0, 1, 8, 30, 10)
+rat = Character('Rat', 'Animal', 1, 0, 1, 3, 10, 5)
+knight = Character('Knight', 'Knight', 10, 20, 20, 100, 500, 300)
+dragon = Character('Dragon', 'Dragon', 100, 100, 100, 1000, 1000000000, 1000000000)
+peasant = Character('Villager', 'Peasant', 5, 2, 3, 15, 100, 30)
+wolf = Character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
 
 monsters = [goblin, rat, knight, dragon, peasant, wolf]
 
@@ -126,11 +130,14 @@ def printTxtArray(arr):
 
 # Begins the game
 
+
 def newGame():
     global player
     playerName = input('What is your character\'s name? ')
     playerJob = input('What is your character\'s job? ')
-    player = protagonist(playerName, playerJob, 1, 1, 3, 10, 0, 0, 0)
+
+# Name, Job, level, armor, attack, health, exp, $$, exploration
+    player = NewProtagonist(playerName, playerJob)
     intro(player)
     command()
 
@@ -275,7 +282,7 @@ def secondTurn(first, second):
             fight(first)
 
 # =============================================
-#               EXPLORATION STUFF
+#              EXPLORATION STUFF
 # =============================================
 def wander():
     global player
@@ -319,7 +326,7 @@ def exploreCheck(points):
 
 
 # =============================================
-#                Save STUFF
+#                SAVE STUFF
 # =============================================
 
 def save():
@@ -375,6 +382,7 @@ def action(playerChoice):
         command()
 
 def death():
+    global player
     print('Thus it was not meant to be...')
     print(player.name,"looks up into the sky...")
     print('With one final breath, he screams and perishes...')
