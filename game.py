@@ -71,6 +71,8 @@ class Character:
         self.armor = armor
         self.experience = experience
         self.gold = gold
+        def setHealth(self, health):
+            self.currentHealth = health
         pass
 
 
@@ -87,6 +89,15 @@ class NewProtagonist(Character):
         self.experience = 0
         self.gold = 0
         self.exploration = 0
+        def levelUp(self):
+            self.level += 1
+            self.health += 10
+            self.attack += 3
+            self.armor += 1  
+        def setExperience(self, experience):
+            self.experience += experience
+        def setExploration(self, exploration):
+            self.exploration += exploration
         super().__init__(name, job, self.level, self.maxHealth, self.currentHealth, self.attack, self.armor, self.experience, self.gold)
 
 
