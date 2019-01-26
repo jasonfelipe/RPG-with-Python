@@ -61,13 +61,14 @@ explorationTxt = {
 }
 
 class Character:
-    def __init__(self, name, job, level, armor, attack, health, experience, gold):
+    def __init__(self, name, job, level, maxHealth, currentHealth, attack, armor, experience, gold):
         self.name = name
         self.job = job
         self.level = level
-        self.armor = armor
+        self.maxHealth = maxHealth
+        self.currentHealth = currentHealth
         self.attack = attack
-        self.health = health
+        self.armor = armor
         self.experience = experience
         self.gold = gold
         pass
@@ -79,28 +80,29 @@ class NewProtagonist(Character):
         self.name = name
         self.job = job
         self.level = 1
-        self.armor = 3
+        self.maxHealth = 100
+        self.currentHealth = 100
         self.attack = 5
-        self.health = 20
+        self.armor = 3
         self.experience = 0
         self.gold = 0
         self.exploration = 0
-        super().__init__(name, job, self.level, self.armor, self.health, self.experience, self.gold, exploration)
+        super().__init__(name, job, self.level, self.maxHealth, self.currentHealth, self.attack, self.armor, self.experience, self.gold)
 
 
 # Empty Variable which is filled in on our newGame function
 player = None
 
 # Monsters that were created
-# Name, Job, level, armor, attack, health, exp, $$
-goblin = Character('Goblin', 'Goblin', 2, 0, 1, 8, 30, 10)
-rat = Character('Rat', 'Animal', 1, 0, 1, 3, 10, 5)
-knight = Character('Knight', 'Knight', 10, 20, 20, 100, 500, 300)
-dragon = Character('Dragon', 'Dragon', 100, 100, 100, 1000, 1000000000, 1000000000)
-peasant = Character('Villager', 'Peasant', 5, 2, 3, 15, 100, 30)
-wolf = Character('Wolf', 'Animal', 3, 2, 2, 5, 15, 10)
+# Name, Job, level, armor, attack, currentHealth, maxHealth, exp, $$
+goblin = Character('Goblin', 'Humanoid', 2, 0, 1, 8, 8, 30, 10)
+rat = Character('Rat', 'Animal', 1, 0, 1, 3, 3, 10, 5)
+# knight = Character('Knight', 'Knight', 10, 20, 20, 100, 100, 500, 300)
+# dragon = Character('Dragon', 'Dragon', 100, 100, 100, 1000, 1000, 1000000000, 1000000000)
+peasant = Character('Villager', 'Peasant', 5, 2, 3, 15, 15, 100, 30)
+wolf = Character('Wolf', 'Animal', 3, 2, 2, 5, 5, 15, 10)
 
-monsters = [goblin, rat, knight, dragon, peasant, wolf]
+monsters = [goblin, rat, peasant, wolf]
 
 # =============================================
 #               INFO STUFF
@@ -116,7 +118,7 @@ def printInfo(something):
     # print('-' * 50)
     print('Job:',something.job)
     print('Level:',something.level)
-    print('HP:',something.health)
+    print('HP:',something.currentHealth, '/',something.maxHealth)
     print('Attack:',something.attack)
     print('Armor:',something.armor)
     print('Experience:',something.experience)
@@ -192,7 +194,7 @@ def battle(input, enemy):
         command()
     elif input.lower() == 'defend':
         defend()
-        turnOrder(player, enemy)
+        turnOrder(enemy, player)
     elif input.lower() == 'help':
         fightHelp()
         fight(enemy)
@@ -226,16 +228,20 @@ def firstTurn(first, second):
     fName = first.name
     sName = second.name
 
-    fHealth = first.health
-    sHealth = second.health
+    fHealth = first.currentHealth
+    sHealth = second.currentHealth
 
     fAttack = first.attack
     sAttack = second.attack
+
 
     print(fName,'goes first!')
     print(fName,'attacks',sName)
     print(sName,'takes',fAttack,'damage!')
     sHealth = attacked(sHealth, fAttack)
+
+    print(sName, 'is now at', sHealth)
+
     if sHealth <= 0:
         if sName == player.name:
             print(sName,'has been slayed!')
@@ -244,8 +250,12 @@ def firstTurn(first, second):
         else:
             print(sName,'has been slayed!')
             print(fName,'does a sweet victory dance!')
+            player.currentHealth = fHealth
+
+            print("Player's health is:",player.currentHealth)
             command()
     else:
+
         secondTurn(first, second)
 
 def secondTurn(first, second):
@@ -253,8 +263,8 @@ def secondTurn(first, second):
     fName = first.name
     sName = second.name
 
-    fHealth = first.health
-    sHealth = second.health
+    fHealth = first.currentHealth
+    sHealth = second.currentHealth
 
     fAttack = first.attack
     sAttack = second.attack
@@ -273,6 +283,8 @@ def secondTurn(first, second):
             print(fName,'has been slayed!')
             print(sName,'does a sweet victory dance!')
             print('-' * 50)        
+            player.currentHealth = sHealth
+            print("Player health is:", player.currentHealth)
             command()
     else:
         print('-' * 50)
@@ -374,6 +386,7 @@ def action(playerChoice):
         command()
     elif playerChoice.lower() == 'end':
         print('Good Bye!')
+        
     elif playerChoice.lower() =='die':
         death()
     else:
